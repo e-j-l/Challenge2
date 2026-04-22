@@ -1,4 +1,7 @@
 import javax.swing.*;
+
+import git.tools.client.GitSubprocessClient;
+
 import java.awt.*;
 import java.io.File;
 
@@ -116,12 +119,23 @@ public class GitHubToolGUI {
 
     private void handleCreateRepo() {
         String repoName = repoNameField.getText();
+        String repoPath = selectedFolder.getAbsolutePath();
 
         if (selectedFolder == null || repoName.isEmpty()) {
             outputArea.append("Please select a folder and enter a repo name.\n");
             return;
         }
 
+        // Creating the initial commit for the repo
+        GitSubprocessClient gitSubprocessClient = new GitSubprocessClient(repoPath);
+
+        String gitInit = gitSubprocessClient.gitInit();
+
+        String gitAddAll = gitSubprocessClient.gitAddAll();
+
+        String commitMessage = "Intial Commit";
+        String commit = gitSubprocessClient.gitCommit(commitMessage);
+        
         outputArea.append("Starting process...\n");
         outputArea.append("Repo: " + repoName + "\n");
     }
