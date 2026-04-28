@@ -1,6 +1,9 @@
 import javax.swing.*;
 
 import git.tools.client.GitSubprocessClient;
+import github.tools.client.GitHubApiClient;
+import github.tools.client.RequestParams;
+import github.tools.responseObjects.*;
 
 import java.awt.*;
 import java.io.File;
@@ -14,6 +17,8 @@ public class GitHubToolGUI {
     private JCheckBox privateCheckBox;
     private File selectedFolder;
     private JLabel folderLabel;
+    private JTextField usernameField;
+    private JPasswordField tokenField;
 
     public GitHubToolGUI() {
         frame = new JFrame("GitHub Repo Creator");
@@ -49,7 +54,7 @@ public class GitHubToolGUI {
         frame.add(topPanel, BorderLayout.NORTH);
 
         
-        JPanel centerPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        JPanel centerPanel = new JPanel(new GridLayout(8, 2, 10, 10));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Folder selection
@@ -75,6 +80,16 @@ public class GitHubToolGUI {
         centerPanel.add(new JLabel("Private Repo:"));
         privateCheckBox = new JCheckBox();
         centerPanel.add(privateCheckBox);
+
+        // Github Username
+        centerPanel.add(new JLabel("GitHub Username:"));
+        usernameField = new JTextField();
+        centerPanel.add(usernameField);
+
+        // Github Token
+        centerPanel.add(new JLabel("GitHub Token:"));
+        tokenField = new JPasswordField();
+        centerPanel.add(tokenField);
 
         // Button
         JButton createButton = new JButton("Create Repository");
@@ -119,12 +134,15 @@ public class GitHubToolGUI {
 
     private void handleCreateRepo() {
         String repoName = repoNameField.getText();
-        String repoPath = selectedFolder.getAbsolutePath();
 
         if (selectedFolder == null || repoName.isEmpty()) {
             outputArea.append("Please select a folder and enter a repo name.\n");
             return;
         }
+
+        String repoPath = selectedFolder.getAbsolutePath();
+
+        try {
 
         // Creating the initial commit for the repo
         GitSubprocessClient gitSubprocessClient = new GitSubprocessClient(repoPath);
@@ -133,12 +151,43 @@ public class GitHubToolGUI {
 
         String gitAddAll = gitSubprocessClient.gitAddAll();
 
-        String commitMessage = "Intial Commit";
+        String commitMessage = "Initial Commit";
         String commit = gitSubprocessClient.gitCommit(commitMessage);
-        
+
         outputArea.append("Starting process...\n");
         outputArea.append("Repo: " + repoName + "\n");
+
+        // Gets github username and token
+        String username = usernameField.getText();
+        String token = new String(tokenField.getPassword());
+
+        GitHubApiClient gitHubApiClient = new GitHubApiClient(username, token);
+
+        // Creates request parameters
+        RequestParams params = new RequestParams();
+        params.addParam("name", repoName);
+        params.addParam("description", descriptionField.getText());
+        params.addParam("private", privateCheckBox.isSelected());
+
+        // Creates repo
+        CreateRepoResponse response = gitHubApiClient.createRepo(params);
+
+        // Get repo url
+        String repoUrl = response.getJson().get("clone_url").getAsString();
+
+        // Add remote origin
+        String remote = gitSubprocessClient.gitRemoteAdd("origin", repoUrl);
+
+        // Pushes to github
+        String push = gitSubprocessClient.gitPush("master");
+
+        // Gives user url
+        outputArea.append("Repo successfully created!\n");
+        outputArea.append("Repo URL: " + repoUrl + "\n");
+        } catch (Exception e) {
+            outputArea.append("Something went wrong.\n");
     }
+}
 
     public static void main(String[] args) {
         new GitHubToolGUI();
