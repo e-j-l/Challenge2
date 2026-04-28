@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Repo Creator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Unbounded', sans-serif;
+      background-image: url('background1.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #f0f0f0;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 { font-size: 2rem; }
+    h2 { margin-top: 2rem; font-size: 1.1rem; }
+    ul, ol { line-height: 2; }
+    p { line-height: 1.8; font-size: 0.85rem; }
+    li { font-size: 0.85rem; }
+    code {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #9fd;
+    }
+    a {
+      color: #9fd;
+      text-decoration: underline;
+    }
+    a:hover {
+      opacity: 0.8;
+    }
+    footer { margin-top: 3rem; font-style: italic; color: gray; font-size: 0.7rem; }
+
+    .bubble {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bubble">
+  <h1>GitHub Repo Creator</h1>
+  <p>A desktop GUI application that converts a local project folder into a Git repository and publishes it to GitHub, no command line required.</p>
+</div>
+
+<div class="bubble">
+  <h2>Requirements</h2>
+  <ul>
+    <li>Java JDK 11 or higher</li>
+    <li>Git installed on your machine</li>
+    <li>GitSubprocessClient (latest version) download <a href="https://github.com/CSC109/GitSubprocessClient" target="_blank">here</a></li>
+    <li>GitHubApiClient (latest version) download <a href="https://github.com/CSC109/GitHubApiClient" target="_blank">here</a></li>
+    <li>A GitHub account</li>
+  </ul>
+</div>
+
+<div class="bubble">
+  <h2>Setup</h2>
+  <ol>
+    <li>Download the GitSubprocessClient and GitHubApiClient <code>.jar</code> files from their GitHub repos under Releases and add them to your project locally.</li>
+    <li>Run the application via <code>Main.java</code> in your IDE.</li>
+  </ol>
+</div>
+
+<div class="bubble">
+  <h2>Usage</h2>
+  <ol>
+    <li>Click <strong>Select Folder</strong> and choose your local project folder.</li>
+    <li>Enter a repository name, description, and choose public or private visibility.</li>
+    <li>Click <strong>Create Repository</strong>.</li>
+    <li>The output area will display your new GitHub repository URL when complete.</li>
+  </ol>
+</div>
+</body>
+</html>
